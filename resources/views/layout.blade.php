@@ -89,12 +89,7 @@
 
                     <ul class="navbar-nav ms-auto">
                         @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">Entrar</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="btn btn-danger btn-sm ms-2 px-3 rounded-pill" href="{{ route('users.create') }}">Cadastrar</a>
-                            </li>
+
                         @else
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown">
