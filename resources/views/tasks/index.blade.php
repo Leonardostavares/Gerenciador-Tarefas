@@ -1,9 +1,17 @@
-@extends('layout') {{-- Puxa o seu layout principal --}}
+@extends('layout') {{-- Puxa o seu layout principal, nome: 'layout' --}}
 
 @section('content')
 
 <div class="row justify-content-center">
     <div class="col-md-10">
+        
+        {{-- Mensagens de feedback (Ex: "Task updated successfully.") --}}
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
         
         <div class="card shadow-sm border-0">
             
@@ -12,7 +20,7 @@
                     <i class="bi bi-list-check text-danger me-2"></i> Minhas Tarefas
                 </h4>
                 <a href="{{ route('tasks.create') }}" class="btn btn-danger btn-sm rounded-pill px-3">
-                    <i class="bi bi-plus-lg"></i> Nova  
+                    <i class="bi bi-plus-lg"></i> Nova 
                 </a>
             </div>
 
@@ -41,37 +49,46 @@
 
                                     <td>
                                         @php
-                                            // Lógica simples para definir a cor do badge
+                                            // Lógica para definir a cor do badge
                                             $badgeClass = match($task->status) {
-                                                'concluida' => 'bg-success',
-                                                'pendente' => 'bg-warning text-dark',
-                                                'cancelada' => 'bg-danger',
+                                                'completed' => 'bg-success',
+                                                'in_progress' => 'bg-primary',
+                                                'pending' => 'bg-warning text-dark',
                                                 default => 'bg-secondary'
+                                            };
+                                            
+                                            // Tradução simples para exibição
+                                            $statusText = match($task->status) {
+                                                'completed' => 'Concluída',
+                                                'in_progress' => 'Em Progresso',
+                                                'pending' => 'Pendente',
+                                                default => ucfirst($task->status)
                                             };
                                         @endphp
                                         <span class="badge rounded-pill {{ $badgeClass }}">
-                                            {{ ucfirst($task->status) }}
+                                            {{ $statusText }}
                                         </span>
                                     </td>
 
                                     <td>
                                         @php
-                                            $isLate = $task->status != 'concluida' && strtotime($task->limit_date) < time();
+                                            // Verifica se a data limite passou e a task não está concluída
+                                            $isLate = $task->status !== 'completed' && $task->limit_date && strtotime($task->limit_date) < time();
                                         @endphp
                                         
                                         <span class="{{ $isLate ? 'text-danger fw-bold' : 'text-muted' }}">
                                             <i class="bi bi-calendar-event me-1"></i>
-                                            {{ $task->limit_date ? date('d/m/Y', strtotime($task->limit_date)) : 'Sem data' }}</span>
+                                            {{ $task->limit_date ? date('d/m/Y', strtotime($task->limit_date)) : 'Sem data' }}
+                                        </span>
                                     </td>
 
                                     <td class="text-end pe-4">
                                         <div class="btn-group">
-                                            <button class="btn btn-sm btn-outline-secondary" title="Editar">
+                                            {{-- ⭐ BOTÃO DE EDIÇÃO: Aponta para a rota tasks.edit --}}
+                                            <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-sm btn-outline-secondary" title="Editar">
                                                 <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger" title="Excluir">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
+                                            </a>
+                                            
                                         </div>
                                     </td>
                                 </tr>

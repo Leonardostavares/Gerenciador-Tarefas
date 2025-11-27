@@ -35,4 +35,35 @@ class TasksController extends Controller
        
        return redirect()->route('tasks.index')->with('success', 'Task created successfully.');
     }
+
+    public function edit($id) {
+
+        $taskArray = DB::select('SELECT * FROM tasks WHERE id = ? AND user_id = ?', [$id, Auth::id()]);
+
+        if (empty($taskArray)) {
+            return redirect()->route('tasks.index')->with('error', 'Task not found.');
+        }
+        $task = $taskArray[0];
+        return view('tasks.edit', compact('task'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'limit_date' => 'nullable|date',
+            'status' => 'required|in:pending,completed,in_progress',
+        ]);
+
+        DB::update('UPDATE tasks SET title = ?, description = ?, limit_date = ?, status = ?, updated_at = NOW() WHERE id = ? AND user_id = ?', [
+            $validated['title'],
+            $validated['description'] ?? null,
+            $validated['limit_date'] ?? null,
+            $validated['status'],
+            $id,
+            Auth::id(),
+        ]);
+        return redirect()->route('tasks.index')->with('success', 'Task updated successfully.');
+    }
 }

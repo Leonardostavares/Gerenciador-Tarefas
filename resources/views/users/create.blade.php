@@ -31,6 +31,24 @@
                 @enderror
             </div>
 
+            {{-- CAMPO CPF ADICIONADO AQUI --}}
+            <div class="mb-3">
+                <label for="cpf" class="form-label">CPF</label>
+                <input 
+                    type="text" 
+                    class="form-control @error('cpf') is-invalid @enderror" 
+                    id="cpf" 
+                    name="cpf" 
+                    value="{{ old('cpf') }}"
+                    placeholder="Ex: 12345678900"
+                    required
+                >
+                @error('cpf')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+            {{-- FIM DO CAMPO CPF --}}
+
             {{-- Campo Email --}}
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>

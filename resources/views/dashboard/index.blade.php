@@ -1,4 +1,3 @@
-{{-- O nome aqui dentro deve ser igual ao nome do arquivo do layout (sem o .blade.php) --}}
 @extends('layout')
 
 @section('content')
@@ -26,6 +25,7 @@
             <li><strong>ID:</strong> {{ $user->id }}</li>
             <li><strong>Nome de Usuário:</strong> {{ $user->name }}</li>
             <li><strong>E-mail:</strong> {{ $user->email }}</li>
+            <li><strong>CPF:</strong> {{ $user->cpf }}</li>
             <li><strong>Membro Desde:</strong> {{ $user->created_at->format('d/m/Y \à\s H:i:s') }}</li>
         </ul>
 
@@ -33,10 +33,13 @@
         <div class="mt-4">
             <h4>Configurações da Conta</h4>
             <div class="d-flex gap-3 mt-3">
-                <button type="button" class="btn btn-outline-primary">
+                
+                {{-- ⭐ MODIFICAÇÃO CHAVE: Usando <a> para gerar o link de edição --}}
+                <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary">
                     <i class="bi bi-envelope-fill me-2"></i>
-                    Editar E-mail
-                </button>
+                    Atualizar informações
+                </a>
+                
                 <button type="button" class="btn btn-outline-danger">
                     <i class="bi bi-lock-fill me-2"></i>
                     Alterar Senha

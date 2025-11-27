@@ -36,4 +36,12 @@ Route::middleware('auth')->group(function () {
     Route::post('tasks', [App\Http\Controllers\TasksController::class, 'store'])->name('tasks.store');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('tasks/{id}/edit', [App\Http\Controllers\TasksController::class, 'edit'])->name('tasks.edit');
+    
+    Route::put('tasks/{id}/update', [App\Http\Controllers\TasksController::class, 'update'])->name('tasks.update');
+
+    Route::get('/users/{id}/edit', [UsersController::class, 'edit'])->name('users.edit');
+
+    Route::put('/users/{id}/update', [UsersController::class, 'update'])->name('users.update');
 });
