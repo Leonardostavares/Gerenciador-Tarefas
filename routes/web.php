@@ -44,4 +44,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/users/{id}/edit', [UsersController::class, 'edit'])->name('users.edit');
 
     Route::put('/users/{id}/update', [UsersController::class, 'update'])->name('users.update');
+
+    Route::patch('/users/alterarSenha/{id}', [UsersController::class, 'alterarSenha'])->name('users.alterarSenha');
+
+    Route::get('/users/{id}/editarSenha', [UsersController::class, 'editarSenha'])->name('users.editarSenha');
 });

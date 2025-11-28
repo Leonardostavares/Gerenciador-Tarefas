@@ -4,11 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 class UsersController extends Controller
 {
     public function index()
     {
-        $users = DB::select('SELECT * FROM users');
+        try {
+            $users = DB::select('SELECT id, name, email, cpf, created_at, updated_at FROM users');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Erro ao buscar usuários: ' . $e->getMessage());
+        }
         return view('users.index', compact('users'));
     }
 
@@ -57,5 +62,26 @@ class UsersController extends Controller
             $id,
         ]);
         return redirect()->route('users.index')->with('success', 'Usuário atualizado com sucesso.');
+    }
+
+
+    public function editarSenha($id) {
+        $user = Auth::user();
+        return view('users.alterarSenha', compact('user'));
+    }
+    public function alterarSenha(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        DB::update('UPDATE users SET password = ?, updated_at = NOW() WHERE id = ?', [
+            bcrypt($validated['password']),
+            $id,
+        ]);
+
+        Auth::logout();
+
+        return redirect()->route('login')->with('success', 'Senha alterada com sucesso. Por favor, faça login novamente.');
     }
 }

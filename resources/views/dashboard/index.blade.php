@@ -23,10 +23,16 @@
         <h3>Detalhes da Conta</h3>
         <ul>
             <li><strong>ID:</strong> {{ $user->id }}</li>
-            <li><strong>Nome de Usuário:</strong> {{ $user->name }}</li>
+            <li><strong>Nome completo:</strong> {{ $user->name }}</li>
             <li><strong>E-mail:</strong> {{ $user->email }}</li>
             <li><strong>CPF:</strong> {{ $user->cpf }}</li>
-            <li><strong>Membro Desde:</strong> {{ $user->created_at->format('d/m/Y \à\s H:i:s') }}</li>
+            <li><strong>Membro Desde:</strong> 
+                {{ 
+                    $user->created_at 
+                    ? \Carbon\Carbon::parse($user->created_at)->format('d/m/Y \à\s H:i:s') 
+                    : 'N/A' 
+                }}
+            </li>
         </ul>
 
         {{-- Botões de Edição --}}
@@ -34,16 +40,17 @@
             <h4>Configurações da Conta</h4>
             <div class="d-flex gap-3 mt-3">
                 
-                {{-- ⭐ MODIFICAÇÃO CHAVE: Usando <a> para gerar o link de edição --}}
+                {{-- Link para Edição de Perfil (Atualizar informações) --}}
                 <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary">
                     <i class="bi bi-envelope-fill me-2"></i>
                     Atualizar informações
                 </a>
                 
-                <button type="button" class="btn btn-outline-danger">
+                {{-- ⭐ MODIFICAÇÃO CHAVE: Link para Alterar Senha --}}
+                <a href="{{ route('users.editarSenha', $user->id) }}" class="btn btn-outline-danger">
                     <i class="bi bi-lock-fill me-2"></i>
                     Alterar Senha
-                </button>
+                </a>
             </div>
         </div>
         
