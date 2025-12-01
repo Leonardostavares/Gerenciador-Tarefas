@@ -7,7 +7,7 @@
 <body>
     {{-- Acessando como um array associativo --}}
     <h1>Olá, {{ $userData['name'] }}!</h1>
-
+    
     <p>É um prazer tê-lo(a) em nosso **{{ config('app.name') }}**!</p>
     <p>Seu e-mail de acesso é: **{{ $userData['email'] }}**</p>
 
