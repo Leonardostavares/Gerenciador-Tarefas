@@ -28,13 +28,17 @@ class UsersController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|',
             'cpf' => 'required|string|size:11|unique:users',
+            'address' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:20',
         ]);
 
-        DB::insert('INSERT INTO users (name, email, cpf,password, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())', [
+        DB::insert('INSERT INTO users (name, email, cpf,password, address, phone, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())', [
             $validated['name'],
             $validated['email'],
             $validated['cpf'],  
             bcrypt($validated['password']),
+            $validated['address'],
+            $validated['phone'],
         ]);
 
         Mail::to($validated['email'])->send(new WelcomeEmail($validated));

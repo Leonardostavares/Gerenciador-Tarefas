@@ -79,7 +79,42 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
-            
+
+            {{-- CAMPO ENDEREÇO --}}
+            <div class="mb-3">
+                <label for="address" class="form-label">Endereço</label>
+                <input 
+                    type="text" 
+                    class="form-control @error('address') is-invalid @enderror" 
+                    id="address" 
+                    name="address" 
+                    value="{{ old('address') }}"
+                    required
+                >
+                @error('address')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+            {{-- FIM DO CAMPO ENDEREÇO --}}
+
+            {{-- CAMPO TELEFONE --}}
+            <div class="mb-3">
+                <label for="phone" class="form-label">Telefone</label>
+                <input 
+                    type="text" 
+                    class="form-control @error('phone') is-invalid @enderror" 
+                    id="phone" 
+                    name="phone" 
+                    value="{{ old('phone') }}"
+                    placeholder="Ex: (11) 91234-5678"
+                    required
+                >
+                @error('phone')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+            {{-- FIM DO CAMPO TELEFONE --}}
+
             {{-- O CAMPO DE CONFIRMAÇÃO DE SENHA FOI REMOVIDO AQUI --}}
 
             {{-- Botões de Ação --}}

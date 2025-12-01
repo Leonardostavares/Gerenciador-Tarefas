@@ -26,12 +26,9 @@
             <li><strong>Nome completo:</strong> {{ $user->name }}</li>
             <li><strong>E-mail:</strong> {{ $user->email }}</li>
             <li><strong>CPF:</strong> {{ $user->cpf }}</li>
-            <li><strong>Membro Desde:</strong> 
-                {{ 
-                    $user->created_at 
-                    ? \Carbon\Carbon::parse($user->created_at)->format('d/m/Y \à\s H:i:s') 
-                    : 'N/A' 
-                }}
+            <li><strong>Telefone:</strong> {{ $user->phone }}</li>
+            <li><strong>Endereço:</strong> {{ $user->address }}</li>
+            <li><strong>Criado em:</strong> {{ $user->created_at->format('d/m/Y') }}</li>
             </li>
         </ul>
 
