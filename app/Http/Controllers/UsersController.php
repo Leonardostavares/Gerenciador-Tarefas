@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Mail\WelcomeEmail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -36,6 +37,8 @@ class UsersController extends Controller
             bcrypt($validated['password']),
         ]);
 
+        Mail::to($validated['email'])->send(new WelcomeEmail($validated));
+        
         return redirect()->route('users.index')->with('success', 'Usuario criado com sucesso!');
     }
     public function edit($id) {
