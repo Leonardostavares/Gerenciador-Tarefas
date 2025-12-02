@@ -1,11 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Mail\WelcomeEmail;
+use App\Service\DataCleaner;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+
 class UsersController extends Controller
 {
     public function index()
@@ -22,7 +25,14 @@ class UsersController extends Controller
         return view('users.create');
     }
 
-    public function store (Request $request) {    
+    public function store (Request $request, DataCleaner $dataCleaner) {    
+        
+        $cpfCleaned = $dataCleaner->clearString($request->input('cpf'));
+        $phoneCleaned = $dataCleaner->clearString($request->input('phone'));
+
+        $request->merge(['cpf' => $cpfCleaned, 'phone' => $phoneCleaned]);
+
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
