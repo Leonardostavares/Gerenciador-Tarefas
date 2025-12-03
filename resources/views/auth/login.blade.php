@@ -13,6 +13,15 @@
             </div>
             <div class="card-body">
                 
+                {{-- 💡 NOVO CÓDIGO AQUI: Verifica e exibe a mensagem de SUCESSO da sessão ('status') --}}
+                @if (session('status'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('status') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                {{-- ---------------------------------------------------------------------------------- --}}
+                
                 {{-- O action foi corrigido para 'login.store' --}}
                 <form method="POST" action="{{ route('login.store') }}">
                     @csrf 
@@ -60,7 +69,7 @@
                         <i class="fas fa-sign-in-alt"></i> Entrar
                     </button>
                     
-                    {{-- ✅ MODIFICAÇÃO AQUI: Link para a rota de "Esqueci a Senha" --}}
+                    {{-- Link para a rota de "Esqueci a Senha" --}}
                     <div class="text-center mt-3">
                         <a href="{{ route('users.esqueciSenha') }}" class="text-muted">Esqueceu sua senha?</a>
                     </div>

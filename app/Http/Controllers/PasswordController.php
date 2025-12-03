@@ -36,9 +36,9 @@ class PasswordController extends Controller
 
         $link = url('/users/redefinirSenha/' . $token);
 
-        Mail::to($request->email)->send(new ResetPasswordEmail($link));
+        Mail::to($request->email)->queue(new ResetPasswordEmail($link));
 
-        return back()->with('status', 'Link de redefinição de senha enviado para o seu email.');
+        return redirect()->route('login')->with('status', 'Link de redefinição de senha enviado para o seu email.');
     }
 
     public function exibirFormulario($token) {
