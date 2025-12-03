@@ -55,7 +55,7 @@ class UsersController extends Controller
 
         Mail::to($validated['email'])->queue(new WelcomeEmail($validated));
         
-        return redirect()->route('auth.login')->with('success', 'Usuario criado com sucesso!');
+        return redirect()->route('login')->with('success', 'Usuario criado com sucesso!');
     }
     public function edit($id) {
         $userArray = DB::select('SELECT * FROM users WHERE id = ?', [$id]);
@@ -105,7 +105,4 @@ class UsersController extends Controller
         return redirect()->route('login')->with('success', 'Senha alterada com sucesso. Por favor, faça login novamente.');
     }
 
-    public function esqueciSenha() {
-        return view('users.esqueciSenha');
-    }
 }

@@ -1,5 +1,5 @@
     <?php
-
+    use App\Http\Controllers\PasswordController;
     use Illuminate\Support\Facades\Route;
     use App\Http\Controllers\Auth\LoginController;
     use App\Http\Controllers\UsersController;
@@ -21,7 +21,13 @@
         
         Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 
-        Route::get('/users/esqueciSenha', [UsersController::class, 'esqueciSenha'])->name('users.esqueciSenha');
+        Route::get('/users/esqueciSenha', [PasswordController::class, 'esqueciSenha'])->name('users.esqueciSenha');
+
+        Route::post('/users/esqueciSenha', [PasswordController::class, 'enviarLink'])->name('password.enviarLink');
+        
+        Route::get('/users/redefinirSenha/{token}', [PasswordController::class, 'exibirFormulario'])->name('password.exibirFormulario');
+        
+        Route::post('/users/redefinirSenha', [PasswordController::class, 'atualizarSenha'])->name('password.atualizarSenha');
 
     });
 
