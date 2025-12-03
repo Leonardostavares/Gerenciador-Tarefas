@@ -60,16 +60,15 @@
                         <i class="fas fa-sign-in-alt"></i> Entrar
                     </button>
                     
-                    {{-- Opcional: Link para Esqueci a Senha --}}
+                    {{-- ✅ MODIFICAÇÃO AQUI: Link para a rota de "Esqueci a Senha" --}}
                     <div class="text-center mt-3">
-                        <a href="#" class="text-muted">Esqueceu sua senha?</a>
+                        <a href="{{ route('users.esqueciSenha') }}" class="text-muted">Esqueceu sua senha?</a>
                     </div>
                 </form>
 
             </div>
         </div>
-        
-        {{-- 🟢 BOTÃO/LINK DE CADASTRO ADICIONADO AQUI --}}
+        {{-- BOTÃO/LINK DE CADASTRO --}}
         <div class="text-center mt-4">
             <p class="text-muted mb-2">Novo no sistema?</p>
             <a href="{{ route('users.create') }}" class="btn btn-success w-100">

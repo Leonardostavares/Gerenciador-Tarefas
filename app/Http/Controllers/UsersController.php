@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ResetPassword;
+use App\Mail\ResetSenhaLink;
 use App\Mail\WelcomeEmail;
 use App\Service\DataCleaner;
 use Illuminate\Support\Facades\Mail;
@@ -51,9 +53,9 @@ class UsersController extends Controller
             $validated['phone'],
         ]);
 
-        Mail::to($validated['email'])->send(new WelcomeEmail($validated));
+        Mail::to($validated['email'])->queue(new WelcomeEmail($validated));
         
-        return redirect()->route('users.index')->with('success', 'Usuario criado com sucesso!');
+        return redirect()->route('auth.login')->with('success', 'Usuario criado com sucesso!');
     }
     public function edit($id) {
         $userArray = DB::select('SELECT * FROM users WHERE id = ?', [$id]);
@@ -86,6 +88,7 @@ class UsersController extends Controller
         $user = Auth::user();
         return view('users.alterarSenha', compact('user'));
     }
+
     public function alterarSenha(Request $request, $id)
     {
         $validated = $request->validate([
@@ -100,5 +103,9 @@ class UsersController extends Controller
         Auth::logout();
 
         return redirect()->route('login')->with('success', 'Senha alterada com sucesso. Por favor, faça login novamente.');
+    }
+
+    public function esqueciSenha() {
+        return view('users.esqueciSenha');
     }
 }
