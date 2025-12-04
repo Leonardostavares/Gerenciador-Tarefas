@@ -25,9 +25,13 @@ class PasswordController extends Controller
         if (!$user) {
             return back()->withErrors(['email' => 'Email não encontrado.']);
         }
-        
+
         $token = Str::random(60);
 
+        if (DB::table('password_reset_tokens')->where('email', $request->email)->exists()) {
+            DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+        }
+        
         DB::insert('INSERT INTO password_reset_tokens (email, token, created_at) VALUES (?, ?, ?)', [
             $request->email,
             $token,
