@@ -35,8 +35,6 @@
     Route::middleware('auth')->group(function () {
         Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
-        Route::get('/users', [UsersController::class, 'index'])->name('users.index');
-
         Route::get('tasks', [App\Http\Controllers\TasksController::class, 'index'])->name('tasks.index');
 
         Route::get('tasks/create', [App\Http\Controllers\TasksController::class, 'create'])->name('tasks.create');
