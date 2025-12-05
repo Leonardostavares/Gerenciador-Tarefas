@@ -50,15 +50,14 @@ class PasswordController extends Controller
         if (empty($reset)) {
             return redirect('/esqueci-senha')->withErrors(['token' => 'Token inválido ou expirado.']);
         }
-        return view('users.resetSenha', ['token' => $token]);
-
+        return view('users.resetSenha', ['token' => $token, 'email' => $reset[0]->email]);
     }
 
     public function atualizarSenha(Request $request) {
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
-            'password' => 'required|confirmed|min:6',
+            'password' => 'required|confirmed|min:8',
         ]);
 
         $reset = DB::select ('SELECT * FROM password_reset_tokens WHERE token = ? AND email = ?', [$request->token, $request->email]);

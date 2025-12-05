@@ -1,10 +1,9 @@
-@extends('layout')  <!-- Extende o layout principal -->
+@extends('layout') 
 
-@section('content')  <!-- Define o conteúdo principal da página -->
+@section('content')
     <div class="container">
         <h2 class="text-center">Redefinir Senha</h2>
         
-        <!-- Mensagens de erro -->
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -15,20 +14,27 @@
             </div>
         @endif
 
-        <!-- Mensagem de sucesso -->
         @if(session('status'))
             <div class="alert alert-success">
                 {{ session('status') }}
             </div>
         @endif
 
-        <!-- Formulário de redefinir senha -->
         <form action="{{ route('password.atualizarSenha') }}" method="POST">
             @csrf
-            <input type="hidden" name="token" value="{{ $token }}">  <!-- Passando o token recebido pelo link -->
+            <input type="hidden" name="token" value="{{ $token }}"> 
+            
             <div class="form-group">
-                <label for="email">E-mail</label>
-                <input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}" required>
+                <label for="email">Email</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    class="form-control" 
+                    value="{{ $email ?? old('email') }}" 
+                    required
+                    readonly
+                >
             </div>
             
             <div class="form-group">
