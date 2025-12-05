@@ -17,7 +17,6 @@ class PasswordController extends Controller
         
         $request->validate([
             'email' => 'required|email',
-        
         ]);
         
         $user = DB::select ('SELECT * FROM users WHERE email = ?', [$request->email]);
