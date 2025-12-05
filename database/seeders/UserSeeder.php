@@ -24,6 +24,9 @@ class UserSeeder extends Seeder
                 'password'   => Hash::make('12345678'), 
                 'created_at' => now(),
                 'updated_at' => now(),
+                'phone'      => $faker->phoneNumber,
+                'address'    => $faker->address,
+                'cpf'        => $faker->cpf,
             ]);
         }   
     }
