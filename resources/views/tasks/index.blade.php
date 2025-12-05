@@ -1,4 +1,4 @@
-@extends('layout') {{-- Puxa o seu layout principal, nome: 'layout' --}}
+@extends('layout')
 
 @section('content')
 
@@ -29,7 +29,9 @@
                     <table class="table table-hover mb-0 align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th scope="col" class="ps-4" style="width: 40%;">Tarefa</th>
+                                <th scope="col" class="ps-4" style="width: 30%;">Tarefa</th>
+                                {{-- 🚩 NOVO CAMPO: CATEGORIA --}}
+                                <th scope="col" style="width: 15%;">Categoria</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Data Limite</th>
                                 <th scope="col" class="text-end pe-4">Ações</th>
@@ -41,15 +43,22 @@
                                     <td class="ps-4">
                                         <div class="fw-bold text-dark">{{ $task->title }}</div>
                                         @if($task->description)
-                                            <small class="text-muted d-block text-truncate" style="max-width: 300px;">
+                                            <small class="text-muted d-block text-truncate" style="max-width: 250px;">
                                                 {{ $task->description }}
                                             </small>
                                         @endif
                                     </td>
-
+                                    
+                                    {{-- 🚩 NOVO CAMPO: Exibindo o nome da categoria --}}
+                                    <td>
+                                        <span class="badge bg-secondary">
+                                            {{ $task->category_name ?? 'Sem Categoria' }}
+                                        </span>
+                                    </td>
+                                    
                                     <td>
                                         @php
-                                            // Lógica para definir a cor do badge
+                                            // Lógica para definir a cor do badge (mantida)
                                             $badgeClass = match($task->status) {
                                                 'completed' => 'bg-success',
                                                 'in_progress' => 'bg-primary',
@@ -57,7 +66,7 @@
                                                 default => 'bg-secondary'
                                             };
                                             
-                                            // Tradução simples para exibição
+                                            // Tradução simples para exibição (mantida)
                                             $statusText = match($task->status) {
                                                 'completed' => 'Concluída',
                                                 'in_progress' => 'Em Progresso',
@@ -72,7 +81,7 @@
 
                                     <td>
                                         @php
-                                            // Verifica se a data limite passou e a task não está concluída
+                                            // Lógica para Data Limite (mantida)
                                             $isLate = $task->status !== 'completed' && $task->limit_date && strtotime($task->limit_date) < time();
                                         @endphp
                                         
@@ -94,7 +103,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center py-5 text-muted">
+                                    <td colspan="5" class="text-center py-5 text-muted">
                                         <i class="bi bi-clipboard-x display-4 d-block mb-3 text-secondary opacity-50"></i>
                                         <p class="h5">Nenhuma tarefa encontrada.</p>
                                         <a href="{{ route('tasks.create') }}" class="text-decoration-none">

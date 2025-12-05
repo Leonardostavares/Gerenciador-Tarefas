@@ -17,14 +17,35 @@
 
         <div class="mb-3">
             <label for="title" class="form-label">Título</label>
-            {{-- value="{{ old('title', $task->title) }}" garante que: --}}
-            {{-- 1. Se houver erro de validação, o valor antigo (old) é mantido. --}}
-            {{-- 2. Caso contrário, o valor atual da task é exibido. --}}
             <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" value="{{ old('title', $task->title) }}" required>
             @error('title')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
+
+        {{-- 🚩 NOVO CAMPO: SELEÇÃO DE CATEGORIA --}}
+        <div class="mb-3">
+            <label for="category_id" class="form-label">Categoria</label>
+            <select class="form-select @error('category_id') is-invalid @enderror" id="category_id" name="category_id">
+                <option value="">Selecione uma Categoria</option>
+                {{-- Define a categoria atualmente salva ou o valor 'old' após um erro --}}
+                @php $currentCategory = old('category_id', $task->category_id); @endphp 
+                
+                @foreach ($categories as $category)
+                    <option 
+                        value="{{ $category->id }}"
+                        {{-- Se o ID da categoria atual for igual ao ID do loop, marca como selecionado --}}
+                        @selected($currentCategory == $category->id)
+                    >
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
+            @error('category_id')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+        {{-- FIM DO NOVO CAMPO --}}
 
         <div class="mb-3">
             <label for="description" class="form-label">Descrição (Opcional)</label>
@@ -43,7 +64,7 @@
             @enderror
         </div>
 
-        <div class="mb-3">`
+        <div class="mb-3">
             <label for="status" class="form-label">Status</label>
             <select class="form-select @error('status') is-invalid @enderror" id="status" name="status" required>
                 {{-- Cria a variável $currentStatus para simplificar a verificação --}}
