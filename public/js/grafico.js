@@ -1,33 +1,31 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const ctx = document.getElementById('meuGraficoDePizza');
-    // Removemos a linha const footerText = document.getElementById('footer-stats');
-
+    // 1. SINCRONIZANDO O ID: Usa o ID da sua Blade
+    const ctx = document.getElementById('meuGraficoDePizza'); 
+    
     if (!ctx) return;
 
-    // Garanta que esta rota chame a sua função StatsController@tasks()
-    fetch('/stats') 
+    // Chamada para a rota que retorna os dados de Categoria (label e total)
+    fetch('/stats') // Verifique se sua rota no web.php é exatamente esta!
         .then(response => {
             if (!response.ok) throw new Error('Erro na requisição: ' + response.status);
-            // O JSON agora é uma LISTA de categorias, não um objeto único.
             return response.json(); 
         })
         .then(dadosJson => {
-            // 🚨 Mapeamento dos dados retornados pelo SQL Puro:
-            const labels = dadosJson.map(item => item.label); // Ex: ["Estudos", "Trabalho", ...]
-            const values = dadosJson.map(item => item.total); // Ex: [15, 11, ...]
-
-            // Removemos a lógica do rodapé, pois o JSON não contém data.total_tasks
-
-            // Renderiza o gráfico de Pizza (Categorias)
+            // Mapeamento dos dados (label e total)
+            const labels = dadosJson.map(item => item.label); 
+            const values = dadosJson.map(item => item.total); 
+            
+            // Renderiza o gráfico de Barras
             new Chart(ctx, {
-                type: 'pie',
+                type: 'bar', // 👈 MUDANÇA ESSENCIAL: Tipo Barras
                 data: {
-                    // O Chart.js usa os labels e values mapeados.
                     labels: labels, 
                     datasets: [{
+                        label: 'Total de Tarefas', 
                         data: values,
-                        backgroundColor: ['#36A2EB', '#ff6363', '#FFCE56', '#4BC0C0', '#9966FF'],
-                        hoverOffset: 15
+                        backgroundColor: '#36A2EB', // Azul
+                        borderColor: '#217fb9',
+                        borderWidth: 1
                     }]
                 },
                 options: {
@@ -36,10 +34,23 @@ document.addEventListener('DOMContentLoaded', function () {
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Distribuição de Tarefas por Categoria'
+                            text: 'Volume de Tarefas por Categoria'
                         },
-                        legend: {
-                            position: 'bottom'
+                        legend: { display: false },
+                    },
+                    scales: { // Define os eixos X e Y
+                        y: {
+                            beginAtZero: true, 
+                            title: {
+                                display: true,
+                                text: 'Quantidade de Tarefas'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Categorias'
+                            }
                         }
                     }
                 }
@@ -47,6 +58,6 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(error => {
             console.error('Erro ao carregar gráfico:', error);
-            // Removemos a lógica de atualizar o rodapé com erro
+            // Você pode adicionar uma mensagem de erro na tela aqui se quiser
         });
 });
