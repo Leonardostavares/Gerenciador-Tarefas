@@ -101,7 +101,7 @@
                                 <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
                                     <li>
                                         <a class="dropdown-item" href="{{ route('dashboard') }}">
-                                            <i class="bi bi-person-gear me-2"></i> Perfil
+                                            <i class="bi bi-person-gear me-2"></i> Graficos
                                         </a>
                                     </li>
                                     <li><hr class="dropdown-divider"></li>
