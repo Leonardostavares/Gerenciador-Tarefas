@@ -13,9 +13,6 @@
                         <canvas id="meuGraficoDePizza"></canvas>
                     </div>
                 </div>
-                <div class="card-footer bg-light text-center">
-                    <small id="footer-stats" class="text-muted">Carregando dados do servidor...</small>
-                </div>
             </div>
         </div>
     </div>

@@ -33,6 +33,7 @@
 
     // Rotas disponiveis apenas para quem ESTÁ logado
     Route::middleware('auth')->group(function () {
+
         Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
         Route::get('tasks', [App\Http\Controllers\TasksController::class, 'index'])->name('tasks.index');
@@ -55,6 +56,6 @@
 
         Route::get('/users/{id}/editarSenha', [UsersController::class, 'editarSenha'])->name('users.editarSenha');
 
-        Route::get('/stats', [App\Http\Controllers\Api\StatsController::class, 'getStats'])->name('stats.getStats');
+        Route::get('/stats', [App\Http\Controllers\Api\StatsController::class, 'tasks'])->name('stats.getStats');
 
     });

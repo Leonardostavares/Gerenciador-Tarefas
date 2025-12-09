@@ -1,27 +1,32 @@
 document.addEventListener('DOMContentLoaded', function () {
     const ctx = document.getElementById('meuGraficoDePizza');
-    const footerText = document.getElementById('footer-stats');
+    // Removemos a linha const footerText = document.getElementById('footer-stats');
 
     if (!ctx) return;
 
-    // Chamada para a rota definida no seu web.php
-    fetch('/stats')
+    // Garanta que esta rota chame a sua função StatsController@tasks()
+    fetch('/stats') 
         .then(response => {
             if (!response.ok) throw new Error('Erro na requisição: ' + response.status);
-            return response.json();
+            // O JSON agora é uma LISTA de categorias, não um objeto único.
+            return response.json(); 
         })
-        .then(data => {
-            // Atualiza o texto do rodapé
-            if (footerText) footerText.innerText = `Total: ${data.total_tasks} tarefas cadastradas`;
+        .then(dadosJson => {
+            // 🚨 Mapeamento dos dados retornados pelo SQL Puro:
+            const labels = dadosJson.map(item => item.label); // Ex: ["Estudos", "Trabalho", ...]
+            const values = dadosJson.map(item => item.total); // Ex: [15, 11, ...]
 
-            // Renderiza o gráfico de Pizza
+            // Removemos a lógica do rodapé, pois o JSON não contém data.total_tasks
+
+            // Renderiza o gráfico de Pizza (Categorias)
             new Chart(ctx, {
                 type: 'pie',
                 data: {
-                    labels: ['Concluídas', 'Pendentes'],
+                    // O Chart.js usa os labels e values mapeados.
+                    labels: labels, 
                     datasets: [{
-                        data: [data.completed_tasks, data.pending_tasks],
-                        backgroundColor: ['#36A2EB', '#FF6384'], // Azul e Rosa
+                        data: values,
+                        backgroundColor: ['#36A2EB', '#ff6363', '#FFCE56', '#4BC0C0', '#9966FF'],
                         hoverOffset: 15
                     }]
                 },
@@ -29,6 +34,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
+                        title: {
+                            display: true,
+                            text: 'Distribuição de Tarefas por Categoria'
+                        },
                         legend: {
                             position: 'bottom'
                         }
@@ -38,6 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(error => {
             console.error('Erro ao carregar gráfico:', error);
-            if (footerText) footerText.innerText = 'Falha ao carregar estatísticas.';
+            // Removemos a lógica de atualizar o rodapé com erro
         });
 });
