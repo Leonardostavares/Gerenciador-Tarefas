@@ -10,7 +10,7 @@ class TasksController extends Controller
 {
     public function index(){
     
-    $tasks = DB::select('SELECT tasks.id, tasks.title, tasks.status, tasks.limit_date, tasks.description, categories.name as category_name FROM tasks LEFT JOIN categories ON tasks.category_id = categories.id WHERE tasks.user_id = ?', [Auth::id()]);       
+    $tasks = DB::select('SELECT tasks.id, tasks.title, tasks.status, tasks.limit_date, tasks.description, tasks.finished_at, categories.name as category_name FROM tasks LEFT JOIN categories ON tasks.category_id = categories.id WHERE tasks.user_id = ?', [Auth::id()]);       
     
     return view('tasks.index', compact('tasks'));    
     }

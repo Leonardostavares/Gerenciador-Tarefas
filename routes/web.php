@@ -55,4 +55,6 @@
 
         Route::get('/users/{id}/editarSenha', [UsersController::class, 'editarSenha'])->name('users.editarSenha');
 
+        Route::get('/stats', [App\Http\Controllers\Api\StatsController::class, 'getStats'])->name('stats.getStats');
+
     });

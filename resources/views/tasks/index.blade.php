@@ -3,9 +3,8 @@
 @section('content')
 
 <div class="row justify-content-center">
-    <div class="col-md-10">
+    <div class="col-md-11"> {{-- Aumentei um pouco a largura para acomodar a nova coluna --}}
         
-        {{-- Mensagens de feedback (Ex: "Task updated successfully.") --}}
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}
@@ -29,11 +28,12 @@
                     <table class="table table-hover mb-0 align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th scope="col" class="ps-4" style="width: 30%;">Tarefa</th>
-                                {{-- 🚩 NOVO CAMPO: CATEGORIA --}}
+                                <th scope="col" class="ps-4" style="width: 25%;">Tarefa</th>
                                 <th scope="col" style="width: 15%;">Categoria</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Data Limite</th>
+                                {{-- 🏁 NOVA COLUNA: DATA DE FINALIZAÇÃO --}}
+                                <th scope="col">Finalizada em</th>
                                 <th scope="col" class="text-end pe-4">Ações</th>
                             </tr>
                         </thead>
@@ -43,13 +43,12 @@
                                     <td class="ps-4">
                                         <div class="fw-bold text-dark">{{ $task->title }}</div>
                                         @if($task->description)
-                                            <small class="text-muted d-block text-truncate" style="max-width: 250px;">
+                                            <small class="text-muted d-block text-truncate" style="max-width: 200px;">
                                                 {{ $task->description }}
                                             </small>
                                         @endif
                                     </td>
                                     
-                                    {{-- 🚩 NOVO CAMPO: Exibindo o nome da categoria --}}
                                     <td>
                                         <span class="badge bg-secondary">
                                             {{ $task->category_name ?? 'Sem Categoria' }}
@@ -58,7 +57,6 @@
                                     
                                     <td>
                                         @php
-                                            // Lógica para definir a cor do badge (mantida)
                                             $badgeClass = match($task->status) {
                                                 'completed' => 'bg-success',
                                                 'in_progress' => 'bg-primary',
@@ -66,7 +64,6 @@
                                                 default => 'bg-secondary'
                                             };
                                             
-                                            // Tradução simples para exibição (mantida)
                                             $statusText = match($task->status) {
                                                 'completed' => 'Concluída',
                                                 'in_progress' => 'Em Progresso',
@@ -78,10 +75,8 @@
                                             {{ $statusText }}
                                         </span>
                                     </td>
-
                                     <td>
                                         @php
-                                            // Lógica para Data Limite (mantida)
                                             $isLate = $task->status !== 'completed' && $task->limit_date && strtotime($task->limit_date) < time();
                                         @endphp
                                         
@@ -91,19 +86,31 @@
                                         </span>
                                     </td>
 
+                                    {{-- 🏁 EXIBIÇÃO DO CAMPO finished_at --}}
+                                    <td>
+                                        @if($task->finished_at)
+                                            <span class="text-success">
+                                                <i class="bi bi-check-circle-fill me-1"></i>
+                                                {{ date('d/m/Y H:i', strtotime($task->finished_at)) }}
+                                            </span>
+                                        @else
+                                            <span class="text-muted small italic">
+                                                <i class="bi bi-clock me-1"></i> Em andamento
+                                            </span>
+                                        @endif
+                                    </td>
+
                                     <td class="text-end pe-4">
                                         <div class="btn-group">
-                                            {{-- ⭐ BOTÃO DE EDIÇÃO: Aponta para a rota tasks.edit --}}
                                             <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-sm btn-outline-secondary" title="Editar">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            
                                         </div>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center py-5 text-muted">
+                                    <td colspan="6" class="text-center py-5 text-muted">
                                         <i class="bi bi-clipboard-x display-4 d-block mb-3 text-secondary opacity-50"></i>
                                         <p class="h5">Nenhuma tarefa encontrada.</p>
                                         <a href="{{ route('tasks.create') }}" class="text-decoration-none">
