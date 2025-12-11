@@ -53,8 +53,8 @@ document.addEventListener('DOMContentLoaded', function () {
             return response.json(); 
         })
         .then(dadosJson => {
-            const labels = dadosJson.map(item => item.label); 
-            const values = dadosJson.map(item => item.total); // Seu SQL retorna 'total'
+            const labels = dadosJson.labels;
+            const values = dadosJson.values;
             
             drawChart(
                 'graficoCategorias',
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ==============================================
     // 2. GRÁFICO DE EFICIÊNCIA (TEMPO MÉDIO)
-    // Rota: /api/stats/avg-completion-time
+    // Rota: /stats/averageTasks
     // ID da Blade: graficoEficiencia
     // ==============================================
     fetch('/stats/averageTasks')
@@ -81,8 +81,8 @@ document.addEventListener('DOMContentLoaded', function () {
             return response.json(); 
         })
         .then(dadosJson => {
-            const labels = dadosJson.map(item => item.label); 
-            const values = dadosJson.map(item => item.value); // Seu SQL retorna 'value' (dias)
+            const labels = dadosJson.labels;
+            const values = dadosJson.values;
             
             drawChart(
                 'graficoEficiencia',

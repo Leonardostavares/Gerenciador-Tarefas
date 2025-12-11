@@ -17,20 +17,32 @@ class StatsController extends Controller
                                     join categories on tasks.category_id = categories.id
                                     where tasks.user_id = ?
                                     GROUP BY categories.name", [$userId]);
-        return response()->json($stats);
+                                    
+        $labels = array_column($stats, 'label');
+
+        $values = array_column($stats, 'total');
+
+        return response()->json([
+            'labels' => $labels,
+            'values' => $values
+        ]);
     }
      public function averageTasks() {
         $userId = auth::id();
-        $sql = "
-        SELECT categories.name AS label, 
+        $stats = DB::select('SELECT categories.name AS label, 
                ROUND(AVG(DATEDIFF(tasks.finished_at, tasks.created_at)), 1) AS value
         FROM tasks
         INNER JOIN categories ON tasks.category_id = categories.id
         WHERE tasks.user_id = ? AND tasks.finished_at IS NOT NULL
         GROUP BY categories.name
-        ORDER BY value DESC
-    ";
-        $stats = DB::select($sql, [$userId]);
-        return response()->json($stats);
-     }
+        ORDER BY value DESC', [$userId]);
+
+        $labels = array_column($stats, 'label');
+        $values = array_column($stats, 'value');
+
+        return response()->json([
+            'labels' => $labels,
+            'values' => $values
+        ]);
+    }
 }
