@@ -71,7 +71,6 @@
                 @php $currentStatus = old('status', $task->status); @endphp
                 
                 <option value="pending" @selected($currentStatus === 'pending')>Pendente</option>
-                <option value="in_progress" @selected($currentStatus === 'in_progress')>Em Progresso</option>
                 <option value="completed" @selected($currentStatus === 'completed')>Concluída</option>
             </select>
             @error('status')
