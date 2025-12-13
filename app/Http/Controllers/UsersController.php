@@ -105,4 +105,9 @@ class UsersController extends Controller
         return redirect()->route('login')->with('success', 'Senha alterada com sucesso. Por favor, faça login novamente.');
     }
 
+    public function profileShow() {
+        $user = Auth::user();
+        return view('users.profile', compact('user'));
+    }
+
 }

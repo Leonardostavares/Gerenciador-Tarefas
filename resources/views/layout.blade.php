@@ -5,15 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ config('app.name', 'Sistema CRUD') }}</title>
     
-    <!-- Fonte Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     
-    <!-- Ícones -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     <style>
@@ -76,14 +73,11 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
                         @auth
-                            <!-- ADICIONEI AQUI O LINK PARA TAREFAS -->
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('tasks.index') }}">
                                     <i class="bi bi-list-check me-1"></i> Minhas Tarefas
                                 </a>
                             </li>
-                            
-
                         @endauth
                     </ul>
 
@@ -99,6 +93,11 @@
                                     <span>{{ Auth::user()->name }}</span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('users.profile') }}">
+                                            <i class="bi bi-person-badge me-2"></i> Meu Perfil
+                                        </a>
+                                    </li>
                                     <li>
                                         <a class="dropdown-item" href="{{ route('dashboard') }}">
                                             <i class="bi bi-person-gear me-2"></i> Graficos
@@ -130,9 +129,15 @@
             </div>
         @endif
 
-        <!-- AQUI É ONDE O CONTEÚDO DAS VIEW ENTRA -->
         @yield('content')
     </main>
+
+    {{-- <footer class="footer mt-auto">
+        <div class="container text-center">
+            &copy; {{ date('Y') }} Sistema CRUD. Todos os direitos reservados.
+        </div>
+    </footer> --}}
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

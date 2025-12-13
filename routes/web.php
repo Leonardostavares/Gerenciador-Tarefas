@@ -61,4 +61,6 @@
         Route::get('/stats/averageTasks', [App\Http\Controllers\Api\StatsController::class, 'averageTasks'])->name('stats.getAverageTasks');
 
         Route::get('/stats/statusTasks', [App\Http\Controllers\Api\StatsController::class, 'statusTasks'])->name('stats.getStatusTasks');
+
+        Route::get('/profileShow', [UsersController::class, 'profileShow'])->name('users.profile');
 });
