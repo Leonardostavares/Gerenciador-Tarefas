@@ -6,7 +6,7 @@
 @section('content')
 <div class="container mt-5">
     
-    <h2>✏️ Editar Tarefa: {{ $task->title }}</h2>
+    <h2>✏️ Editar Tarefa</h2>
 
     {{-- O formulário de edição DEVE usar o método HTTP PUT ou PATCH --}}
     {{-- A diretiva @method faz o "spoofing" (simulação) do método --}}
@@ -70,8 +70,8 @@
                 {{-- Cria a variável $currentStatus para simplificar a verificação --}}
                 @php $currentStatus = old('status', $task->status); @endphp
                 
-                <option value="pending" @selected($currentStatus === 'pending')>Pendente</option>
-                <option value="completed" @selected($currentStatus === 'completed')>Concluída</option>
+                <option value="pendente" @selected($currentStatus === 'pendente')>Pendente</option>
+                <option value="concluída" @selected($currentStatus === 'concluída')>Concluída</option>
             </select>
             @error('status')
                 <div class="invalid-feedback">{{ $message }}</div>

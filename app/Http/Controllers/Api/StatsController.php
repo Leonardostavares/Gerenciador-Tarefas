@@ -47,4 +47,22 @@ class StatsController extends Controller
             'values' => $values
         ]);
     }
+
+    public function statusTasks() {
+        $userId = auth::id();
+        $stats = DB::select('SELECT 
+                                    tasks.status AS label,
+                                    COUNT(tasks.id) AS total
+                            FROM tasks
+                            WHERE tasks.user_id = ?
+                            GROUP BY tasks.status', [$userId]);
+
+        $labels = array_column($stats, 'label');
+        $values = array_column($stats, 'total');
+
+        return response()->json([
+            'labels' => $labels,
+            'values' => $values
+        ]);
+    }
 }

@@ -5,8 +5,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const ctx = document.getElementById(elementId);
         if (!ctx) return;
         
+        // Configurações básicas
         const config = {
-            type: type,
+            // CORREÇÃO ESSENCIAL: 'type' deve usar a variável de parâmetro da função
+            type: type, 
             data: { 
                 labels: labels, 
                 datasets: [{ 
@@ -20,31 +22,35 @@ document.addEventListener('DOMContentLoaded', function () {
                 maintainAspectRatio: false,
                 plugins: {
                     title: { display: true, text: title },
-                    legend: { display: false },
+                    // Exibir legenda apenas para Pizza/Rosca onde é essencial
+                    legend: { display: (type === 'pie' || type === 'doughnut') },
                 },
                 scales: {
-                    y: {
+                    // Escala Y só é necessária para gráficos de barras/linhas
+                    y: (type === 'bar' || type === 'line') ? {
                         beginAtZero: true, 
                         title: {
                             display: true,
                             text: yAxisText // Texto dinâmico para Dias ou Quantidade
                         }
-                    }
+                    } : { display: false } // Oculta o eixo Y para Pizza/Rosca
                 }
             }
         };
-        // Adiciona escalas X e Y customizadas para barras, se não for Pizza/Rosca
-        if (type === 'bar') {
-             config.options.scales.x = { title: { display: true, text: 'Categorias' }};
+        
+        // Adiciona escalas X para barras/linhas
+        if (type === 'bar' || type === 'line') {
+              config.options.scales.x = { title: { display: true, text: 'Rótulos' }};
         }
 
         new Chart(ctx, config);
+        
     };
 
 
     // ==============================================
     // 1. GRÁFICO DE VOLUME (CATEGORIAS)
-    // Rota: /api/stats/categories (ou a que você definiu)
+    // Rota: /stats
     // ID da Blade: graficoCategorias
     // ==============================================
     fetch('/stats')
@@ -96,4 +102,42 @@ document.addEventListener('DOMContentLoaded', function () {
             );
         })
         .catch(error => console.error('Erro Gráfico de Eficiência:', error));
+
+
+    // ==============================================
+    // 3. GRÁFICO DE STATUS (SEU NOVO GRÁFICO!)
+    // Rota: /stats/statusTasks 
+    // ID da Blade: graficoStatus
+    // ==============================================
+    fetch('/stats/statusTasks')
+        .then(response => {
+            if (!response.ok) throw new Error('Erro na requisição: ' + response.status);
+            return response.json(); 
+        })
+        .then(dadosJson => {
+            const labels = dadosJson.labels;
+            const values = dadosJson.values;
+            
+            // Definição de cores para diferentes status (personalize!)
+            const statusColors = [
+                '#FF6384', // Ex: Vermelho/Rosa para 'Pendente'
+                '#FFCD56', // Ex: Amarelo para 'Em Andamento'
+                '#4BC0C0', // Ex: Ciano para 'Concluída'
+                '#9966FF', // Ex: Roxo para 'Cancelada'
+            ];
+
+            drawChart(
+                'graficoStatus',
+                'doughnut', // Tipo Rosca (ou 'pie') - Ideal para proporções
+                'Distribuição de Tarefas por Status',
+                'Total de Tarefas',
+                labels,
+                values,
+                statusColors, 
+                '' // Eixo Y desnecessário para Pie/Doughnut
+            );
+        })
+        .catch(error => console.error('Erro Gráfico de Status:', error));
+
+
 });

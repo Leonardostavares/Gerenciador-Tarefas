@@ -56,7 +56,7 @@ class TasksController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'limit_date' => 'nullable|date',
-            'status' => 'required|in:pending,completed,in_progress',
+            'status' => 'required|in:concluída,pendente',
             'category_id' => 'nullable|integer',
         ]);
 
