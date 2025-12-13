@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    
     // Função auxiliar para desenhar o Chart, evitando repetição de código
     const drawChart = (elementId, type, title, label, labels, data, colors, yAxisText = '') => {
         const ctx = document.getElementById(elementId);
@@ -44,9 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         new Chart(ctx, config);
-        
     };
-
 
     // ==============================================
     // 1. GRÁFICO DE VOLUME (CATEGORIAS)
@@ -75,7 +72,6 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(error => console.error('Erro Gráfico de Categorias:', error));
 
-
     // ==============================================
     // 2. GRÁFICO DE EFICIÊNCIA (TEMPO MÉDIO)
     // Rota: /stats/averageTasks
@@ -102,7 +98,6 @@ document.addEventListener('DOMContentLoaded', function () {
             );
         })
         .catch(error => console.error('Erro Gráfico de Eficiência:', error));
-
 
     // ==============================================
     // 3. GRÁFICO DE STATUS (SEU NOVO GRÁFICO!)
@@ -138,6 +133,4 @@ document.addEventListener('DOMContentLoaded', function () {
             );
         })
         .catch(error => console.error('Erro Gráfico de Status:', error));
-
-
 });

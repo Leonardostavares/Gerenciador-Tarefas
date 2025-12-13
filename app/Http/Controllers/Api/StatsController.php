@@ -55,7 +55,8 @@ class StatsController extends Controller
                                     COUNT(tasks.id) AS total
                             FROM tasks
                             WHERE tasks.user_id = ?
-                            GROUP BY tasks.status', [$userId]);
+                            GROUP BY tasks.status
+                            ORDER BY tasks.status ASC', [$userId]);
 
         $labels = array_column($stats, 'label');
         $values = array_column($stats, 'total');

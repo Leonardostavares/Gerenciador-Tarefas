@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="row justify-content-center">
-    <div class="col-md-11"> {{-- Aumentei um pouco a largura para acomodar a nova coluna --}}
+    <div class="col-md-11"> 
         
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -16,7 +16,7 @@
             
             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                 <h4 class="mb-0 text-secondary">
-                    <i class="bi bi-list-check text-danger me-2"></i> Minhas Tarefas
+                    <i class="bi bi-list-check text-dark me-2"></i> Minhas Tarefas
                 </h4>
                 <a href="{{ route('tasks.create') }}" class="btn btn-danger btn-sm rounded-pill px-3">
                     <i class="bi bi-plus-lg"></i> Nova 
@@ -25,14 +25,13 @@
 
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover mb-0 align-middle">
+                    <table class="table table-striped mb-0 align-middle"> 
                         <thead class="table-light">
                             <tr>
                                 <th scope="col" class="ps-4" style="width: 25%;">Tarefa</th>
                                 <th scope="col" style="width: 15%;">Categoria</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Data Limite</th>
-                                {{-- 🏁 NOVA COLUNA: DATA DE FINALIZAÇÃO --}}
                                 <th scope="col">Finalizada em</th>
                                 <th scope="col" class="text-end pe-4">Ações</th>
                             </tr>
@@ -50,17 +49,18 @@
                                     </td>
                                     
                                     <td>
-                                        <span class="badge bg-secondary">
+                                        <span class="badge bg-light text-secondary border border-secondary border-opacity-50">
                                             {{ $task->category_name ?? 'Sem Categoria' }}
                                         </span>
                                     </td>
                                     
                                     <td>
                                         @php
+                                            // CORREÇÃO AQUI: Mudando para text-white para garantir o contraste.
                                             $badgeClass = match($task->status) {
-                                                'completed' => 'bg-success',
+                                                'completed' => 'bg-success text-white',    // Fundo Verde + Texto BRANCO
                                                 'in_progress' => 'bg-primary',
-                                                'pending' => 'bg-warning text-dark',
+                                                'pending' => 'bg-danger',
                                                 default => 'bg-secondary'
                                             };
                                             
@@ -75,6 +75,7 @@
                                             {{ $statusText }}
                                         </span>
                                     </td>
+                                    
                                     <td>
                                         @php
                                             $isLate = $task->status !== 'completed' && $task->limit_date && strtotime($task->limit_date) < time();
@@ -86,16 +87,15 @@
                                         </span>
                                     </td>
 
-                                    {{-- 🏁 EXIBIÇÃO DO CAMPO finished_at --}}
                                     <td>
                                         @if($task->finished_at)
-                                            <span class="text-success">
+                                            <span class="text-success fw-bold small">
                                                 <i class="bi bi-check-circle-fill me-1"></i>
                                                 {{ date('d/m/Y H:i', strtotime($task->finished_at)) }}
                                             </span>
                                         @else
-                                            <span class="text-muted small italic">
-                                                <i class="bi bi-clock me-1"></i> Em andamento
+                                            <span class="text-muted small">
+                                                <i class="bi bi-clock me-1"></i> Não Finalizada
                                             </span>
                                         @endif
                                     </td>
