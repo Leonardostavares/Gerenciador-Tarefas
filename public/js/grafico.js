@@ -1,136 +1,122 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Função auxiliar para desenhar o Chart, evitando repetição de código
+    // Objeto para armazenar as instâncias dos gráficos e permitir a atualização
+    const charts = {};
+
+    /**
+     * Função auxiliar para desenhar ou atualizar um gráfico
+     */
     const drawChart = (elementId, type, title, label, labels, data, colors, yAxisText = '') => {
         const ctx = document.getElementById(elementId);
         if (!ctx) return;
-        
-        // Configurações básicas
+
+        // LÓGICA DE ATUALIZAÇÃO (AJAX/POLLING)
+        // Se o gráfico já existe no nosso objeto 'charts', apenas atualizamos os dados
+        if (charts[elementId]) {
+            charts[elementId].data.labels = labels;
+            charts[elementId].data.datasets[0].data = data;
+            charts[elementId].update(); // O Chart.js anima a mudança sozinho
+            return;
+        }
+
+        // LÓGICA DE CRIAÇÃO (Primeira vez que a página carrega)
         const config = {
-            // CORREÇÃO ESSENCIAL: 'type' deve usar a variável de parâmetro da função
-            type: type, 
-            data: { 
-                labels: labels, 
-                datasets: [{ 
-                    label: label, 
-                    data: data, 
-                    backgroundColor: colors 
-                }] 
+            type: type,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: label,
+                    data: data,
+                    backgroundColor: colors
+                }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
                     title: { display: true, text: title },
-                    // Exibir legenda apenas para Pizza/Rosca onde é essencial
                     legend: { display: (type === 'pie' || type === 'doughnut') },
                 },
                 scales: {
-                    // Escala Y só é necessária para gráficos de barras/linhas
                     y: (type === 'bar' || type === 'line') ? {
-                        beginAtZero: true, 
-                        title: {
-                            display: true,
-                            text: yAxisText // Texto dinâmico para Dias ou Quantidade
-                        }
-                    } : { display: false } // Oculta o eixo Y para Pizza/Rosca
+                        beginAtZero: true,
+                        title: { display: true, text: yAxisText }
+                    } : { display: false }
                 }
             }
         };
-        
-        // Adiciona escalas X para barras/linhas
+
         if (type === 'bar' || type === 'line') {
-              config.options.scales.x = { title: { display: true, text: 'Rótulos' }};
+            config.options.scales.x = { title: { display: true, text: 'Rótulos' } };
         }
 
-        new Chart(ctx, config);
+        // Guarda a instância para a próxima atualização do polling
+        charts[elementId] = new Chart(ctx, config);
     };
 
-    // ==============================================
-    // 1. GRÁFICO DE VOLUME (CATEGORIAS)
-    // Rota: /stats
-    // ID da Blade: graficoCategorias
-    // ==============================================
-    fetch('/stats')
-        .then(response => {
-            if (!response.ok) throw new Error('Erro na requisição: ' + response.status);
-            return response.json(); 
-        })
-        .then(dadosJson => {
-            const labels = dadosJson.labels;
-            const values = dadosJson.values;
-            
-            drawChart(
-                'graficoCategorias',
-                'bar', // Tipo Barras
-                'Volume de Tarefas por Categoria',
-                'Total de Tarefas',
-                labels,
-                values,
-                '#36A2EB', // Azul
-                'Quantidade de Tarefas'
-            );
-        })
-        .catch(error => console.error('Erro Gráfico de Categorias:', error));
+    /**
+     * Função que busca os dados no Laravel (Backend)
+     */
+    function fetchAllStats() {
+        console.log('Buscando atualizações do banco de dados...');
 
-    // ==============================================
-    // 2. GRÁFICO DE EFICIÊNCIA (TEMPO MÉDIO)
-    // Rota: /stats/averageTasks
-    // ID da Blade: graficoEficiencia
-    // ==============================================
-    fetch('/stats/averageTasks')
-        .then(response => {
-            if (!response.ok) throw new Error('Erro na requisição: ' + response.status);
-            return response.json(); 
-        })
-        .then(dadosJson => {
-            const labels = dadosJson.labels;
-            const values = dadosJson.values;
-            
-            drawChart(
-                'graficoEficiencia',
-                'bar', // Tipo Barras
-                'Tempo Médio de Conclusão',
-                'Média em Dias',
-                labels,
-                values,
-                '#28a745', // Verde
-                'Dias (Média)' // O Eixo Y agora é em Dias
-            );
-        })
-        .catch(error => console.error('Erro Gráfico de Eficiência:', error));
+        // 1. Gráfico de Volume (Categorias)
+        fetch('/stats')
+            .then(response => response.json())
+            .then(dadosJson => {
+                drawChart(
+                    'graficoCategorias',
+                    'bar',
+                    'Volume de Tarefas por Categoria',
+                    'Total de Tarefas',
+                    dadosJson.labels,
+                    dadosJson.values,
+                    '#36A2EB',
+                    'Quantidade de Tarefas'
+                );
+            })
+            .catch(error => console.error('Erro ao atualizar Categorias:', error));
 
-    // ==============================================
-    // 3. GRÁFICO DE STATUS (SEU NOVO GRÁFICO!)
-    // Rota: /stats/statusTasks 
-    // ID da Blade: graficoStatus
-    // ==============================================
-    fetch('/stats/statusTasks')
-        .then(response => {
-            if (!response.ok) throw new Error('Erro na requisição: ' + response.status);
-            return response.json(); 
-        })
-        .then(dadosJson => {
-            const labels = dadosJson.labels;
-            const values = dadosJson.values;
-            
-            // Definição de cores para diferentes status (personalize!)
-            const statusColors = [
-                '#FF6384', // Ex: Vermelho/Rosa para 'Pendente'
-                '#FFCD56', // Ex: Amarelo para 'Em Andamento'
-                '#4BC0C0', // Ex: Ciano para 'Concluída'
-                '#9966FF', // Ex: Roxo para 'Cancelada'
-            ];
+        // 2. Gráfico de Eficiência (Tempo Médio)
+        fetch('/stats/averageTasks')
+            .then(response => response.json())
+            .then(dadosJson => {
+                drawChart(
+                    'graficoEficiencia',
+                    'bar',
+                    'Tempo Médio de Conclusão',
+                    'Média em Dias',
+                    dadosJson.labels,
+                    dadosJson.values,
+                    '#28a745',
+                    'Dias (Média)'
+                );
+            })
+            .catch(error => console.error('Erro ao atualizar Eficiência:', error));
 
-            drawChart(
-                'graficoStatus',
-                'doughnut', // Tipo Rosca (ou 'pie') - Ideal para proporções
-                'Distribuição de Tarefas por Status',
-                'Total de Tarefas',
-                labels,
-                values,
-                statusColors, 
-                '' // Eixo Y desnecessário para Pie/Doughnut
-            );
-        })
-        .catch(error => console.error('Erro Gráfico de Status:', error));
+        // 3. Gráfico de Status
+        fetch('/stats/statusTasks')
+            .then(response => response.json())
+            .then(dadosJson => {
+                const statusColors = ['#FF6384', '#FFCD56', '#4BC0C0', '#9966FF'];
+                drawChart(
+                    'graficoStatus',
+                    'doughnut',
+                    'Distribuição de Tarefas por Status',
+                    'Total de Tarefas',
+                    dadosJson.labels,
+                    dadosJson.values,
+                    statusColors,
+                    ''
+                );
+            })
+            .catch(error => console.error('Erro ao atualizar Status:', error));
+    }
+
+    // Chamada inicial para carregar os gráficos assim que a página abrir
+    fetchAllStats();
+
+    // CONFIGURAÇÃO DO POLLING
+    // Executa a função fetchAllStats a cada 10 segundos
+    // Isso é o "Tempo Real" via AJAX sem recarregar a página.
+    setInterval(fetchAllStats, 10000); 
 });
