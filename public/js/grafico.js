@@ -118,5 +118,5 @@ document.addEventListener('DOMContentLoaded', function () {
     // CONFIGURAÇÃO DO POLLING
     // Executa a função fetchAllStats a cada 10 segundos
     // Isso é o "Tempo Real" via AJAX sem recarregar a página.
-    setInterval(fetchAllStats, 10000); 
+    setInterval(fetchAllStats, 5000); 
 });
