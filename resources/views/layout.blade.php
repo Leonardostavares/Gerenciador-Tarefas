@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {{-- 1. ADICIONADO: Meta Tag para o Reverb identificar o usuário --}}
+    <meta name="user-id" content="{{ auth()->id() }}">
+
     <title>{{ config('app.name', 'Sistema CRUD') }}</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,6 +17,9 @@
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
+    {{-- 2. ADICIONADO: Carregamento do Vite (Echo/Reverb) --}}
+    @vite(['resources/js/app.js'])
+
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -132,12 +139,9 @@
         @yield('content')
     </main>
 
-    {{-- <footer class="footer mt-auto">
-        <div class="container text-center">
-            &copy; {{ date('Y') }} Sistema CRUD. Todos os direitos reservados.
-        </div>
-    </footer> --}}
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    {{-- 3. ADICIONADO: @stack para permitir que a blade de dashboard injete os scripts do gráfico aqui --}}
+    @stack('scripts')
 </body>
 </html>
