@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const charts = {};
 
-    // 1. Função para desenhar/atualizar os gráficos (Sua lógica original)
+    // 1. Função para desenhar/atualizar os gráficos
     const drawChart = (elementId, type, title, label, labels, data, colors) => {
         const ctx = document.getElementById(elementId);
         if (!ctx) return;
@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', function () {
     fetchAllStats();
 
     // 3. O SEGREDO: Conexão com o Reverb usando o ID do Layout
-    // Buscamos a tag <meta name="user-id"> que você acabou de colocar no layout.blade.php
     const userIdMeta = document.querySelector('meta[name="user-id"]');
     
     if (userIdMeta && userIdMeta.content && window.Echo) {
