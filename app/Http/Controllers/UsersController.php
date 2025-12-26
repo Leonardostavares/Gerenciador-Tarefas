@@ -67,8 +67,7 @@ class UsersController extends Controller
         return view('users.edit', compact('user'));
     }
 
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id){
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$id,
@@ -89,8 +88,7 @@ class UsersController extends Controller
         return view('users.alterarSenha', compact('user'));
     }
 
-    public function alterarSenha(Request $request, $id)
-    {
+    public function alterarSenha(Request $request, $id){
         $validated = $request->validate([
             'password' => 'required|string|min:8|confirmed',
         ]);
