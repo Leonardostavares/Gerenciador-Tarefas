@@ -29,6 +29,7 @@ class StatsController extends Controller
             'values' => $values
         ]);
     }
+    
      public function averageTasks() {
         $userId = auth::id();
         $stats = DB::select('SELECT categories.name AS label, 
